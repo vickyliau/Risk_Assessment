@@ -31,6 +31,8 @@ def score_model():
     #np.savetxt(,np.array(f1))
     with open(prod_deployment_path+'/lastestscore.txt', "w+") as f:
         f.write(str(f1));
+    return {'F1 Score': f1}
+
 if __name__ == '__main__':
     score_model()
 

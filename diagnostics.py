@@ -6,12 +6,14 @@ import os
 import json
 from training import train_model
 from ingestion import merge_multiple_dataframe
+import joblib
 
 ##################Load config.json and get environment variables
 with open('config.json','r') as f:
     config = json.load(f) 
 
 dataset_csv_path = os.path.join(config['output_folder_path']) 
+prod_deployment_path = config['prod_deployment_path']
 
 ##################Function to get model predictions
 def model_predictions():
@@ -28,13 +30,14 @@ def dataframe_summary():
     #calculate summary statistics here
     data = pd.read_csv(dataset_csv_path+'/finaldata.csv').iloc[:,1:]
     df = data.describe()
-    df.to_csv(output_folder_path+'/summary.csv',index=False)
-    return df #return value should be a list containing all summary statistics
+    df.to_csv(prod_deployment_path+'/summary.csv',index=False)
+    return df['exited'].to_dict() #return value should be a list containing all summary statistics
 
 ##################Function to calculate the percentage of missing data
 def dataframe_missing():
+    data = pd.read_csv(dataset_csv_path+'/finaldata.csv').iloc[:,1:]
     df = data.isna().sum()/data.shape[0]
-    df.to_csv(output_folder_path+'/missing.csv',index=False)
+    df.to_csv(prod_deployment_path+'/missing.csv',index=False)
     return df #return value with the percentage of missing data
 
 ##################Function to get timings
@@ -69,7 +72,7 @@ def outdated_packages_list():
         df = pd.read_csv('pip_new.txt', sep=r': ')
         new.append(df.iloc[0][0].split(', ')[0])
     mergetab['version_new']=new
-    mergetab.to_csv(output_folder_path+'/version.csv',index=False)
+    mergetab.to_csv(prod_deployment_path+'/version.csv',index=False)
     return mergetab
 
 if __name__ == '__main__':
