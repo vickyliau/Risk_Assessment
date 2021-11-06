@@ -20,7 +20,7 @@ prod_deployment_path = config['prod_deployment_path']
 #############Function for data ingestion
 def merge_multiple_dataframe():
     #check for datasets, compile them together, and write to an output file
-    datalists1 = glob.glob(input_folder_path+'/*.csv')
+    datalists1 = list(glob.glob(input_folder_path+'/*.csv'))
     tab=pd.DataFrame()
     for i in range(len(datalists1)):
         tab = tab.append(pd.read_csv(datalists1[i]))
@@ -28,7 +28,7 @@ def merge_multiple_dataframe():
     tab = tab.drop_duplicates()
     tab.to_csv(output_folder_path+'/finaldata.csv',index=False)
     
-    datalists2 = glob.glob(test_data_path+'/*.csv')
+    datalists2 = list(glob.glob(test_data_path+'/*.csv'))
     tab=pd.DataFrame()
     for i in range(len(datalists2)):
         tab = tab.append(pd.read_csv(datalists2[i]))
@@ -37,10 +37,12 @@ def merge_multiple_dataframe():
     tab.to_csv(output_folder_path+'/testdata.csv',index=False)
 
 
-    results = [datalists1,datalists2]
+    results = ','.join(str(e) for e in datalists1+datalists2)
     
-    outfile = open(prod_deployment_path+'/ingestedfiles.txt', 'w')
-    outfile.writelines(chain(*results))
+    #outfile = open(prod_deployment_path+'/ingestedfiles.txt', 'w')
+    #outfile.writelines(chain(*results))
+    with open(prod_deployment_path+'/ingestedfiles.txt', "w") as text_file:
+        text_file.write(results)
 
 if __name__ == '__main__':
     merge_multiple_dataframe()

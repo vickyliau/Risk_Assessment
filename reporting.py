@@ -27,7 +27,11 @@ def score_model():
     pipe = joblib.load(prod_deployment_path+'/trainedmodel.pkl')
     pred = pipe.predict(indep_variable)
     metrics.ConfusionMatrixDisplay.from_predictions(dep_variable, pred)
-    plt.savefig(prod_deployment_path+'/confusionmatrix.png')
+    exist = sorted(glob.glob(prod_deployment_path+'/*.png'))[-1]
+    if os.path.isfile(exist):
+        plt.savefig(exist.replace('.png','')[:-1]+str(int(exist.replace('.png','')[-1])+1)+'.png')
+    else:
+        plt.savefig(prod_deployment_path+'/confusionmatrix1.png'))
 
 if __name__ == '__main__':
     score_model()

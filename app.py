@@ -21,7 +21,7 @@ prod_deployment_path = config['prod_deployment_path']
 
 @app.route('/')
 def index():
-    return "Hello!"
+    return "Welcome Risk Assessment API!"
 
 #######################Prediction Endpoint
 @app.route("/prediction", methods=['POST','OPTIONS'])
