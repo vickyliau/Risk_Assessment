@@ -16,3 +16,4 @@ def store_model_into_pickle(model):
     # copy the latestscore.txt, ingestfiles.txt file into deployment directory
     shutil.copy(output_model_path+"/lastestscore.txt", prod_deployment_path + "/lastestscore.txt")
     shutil.copy(output_model_path+"/ingestedfiles.txt", prod_deployment_path + "/ingestedfiles.txt")
+    shutil.copy(output_model_path+"/trainedmodel.pkl", prod_deployment_path + "/trainedmodel.pkl")
